@@ -1,0 +1,8 @@
+CompileFlags:
+  Remove: []
+  Add:
+    - --target=i686-pc-windows-msvc
+    - -Wno-microsoft-goto
+    - -fms-compatibility
+    - -fms-extensions
+    - -I./vendor/mfc/include
