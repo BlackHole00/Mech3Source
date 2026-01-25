@@ -29,6 +29,7 @@ ZHckCodeReplacement MECH3_REPLACEMENT_TABLE[] = {
 	{ ZHCK_DEFAULT_MODULE, 0x00575d30, ZHCK_VIRTUAL_ADDRESS, (void*)ZPltGetTickCount			},
 	{ ZHCK_DEFAULT_MODULE, 0x004828d0, ZHCK_VIRTUAL_ADDRESS, (void*)ZPltSetupCurrentWorkingDirectory	},
 	{ ZHCK_DEFAULT_MODULE, 0x0057a3d0, ZHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckCapabilities			},
+	{ ZHCK_DEFAULT_MODULE, 0x00578cd0, ZHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckDeviceSuitability		},
 	{ ZHCK_DEFAULT_MODULE, 0x004af280, ZHCK_VIRTUAL_ADDRESS, (void*)ZGamGetVersionString			},
 	{ ZHCK_DEFAULT_MODULE, 0x004af285, ZHCK_VIRTUAL_ADDRESS, (void*)ZGamGetVersionString			},
 	{ ZHCK_DEFAULT_MODULE, 0x00595f30, ZHCK_VIRTUAL_ADDRESS, ZHckMethodPtrToPtr(&ZDatScriptEngine::GetScriptVariablePtr)	},

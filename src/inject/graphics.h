@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <ddraw.h>
+#include <d3d.h>
 
 #define ZGFX_DISABLE_PESKY_CAPABILITY_CHECK false
 
@@ -27,3 +28,5 @@ typedef enum ZGfxCapabilityLevel {
 } ZGfxCapabilityLevel;
 
 void __fastcall ZGfxCheckCapabilities(ZGfxCapabilityLevel* capabilityLevel, ZGfxInitializationMode* initializationMode);
+
+BOOL __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescription, LPSTR lpDeviceName, D3DDEVICEDESC* lpDeviceDesc, D3DDEVICEDESC* lpHelpDeviceDesc, void* userdata);
