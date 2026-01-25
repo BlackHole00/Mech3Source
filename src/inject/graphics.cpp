@@ -4,6 +4,7 @@
 #include <ddraw.h>
 #include <d3d.h>
 #include <dinput.h>
+#include <winnt.h>
 
 #include "trace.h"
 #include "utils.h"
@@ -183,7 +184,7 @@ typedef struct ZGfxSomeUserData {
 _STATIC_ASSERT(offsetof(ZGfxSomeUserData, suitableDevicesCount) == 0xac);
 _STATIC_ASSERT(offsetof(ZGfxSomeUserData, descriptors) == 0xb0);
 
-BOOL __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescription, LPSTR lpDeviceName, D3DDEVICEDESC* lpDeviceDesc, D3DDEVICEDESC* lpHelpDeviceDesc, void* userdata) {
+HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescription, LPSTR lpDeviceName, D3DDEVICEDESC* lpDeviceDesc, D3DDEVICEDESC* lpHelpDeviceDesc, void* userdata) {
 	ZGfxSomeUserData* data = (ZGfxSomeUserData*)userdata;
 
 	ZGfxD3DDEVICEDESCStorage* currentDescriptor = &data->descriptors[data->suitableDevicesCount];
@@ -191,23 +192,23 @@ BOOL __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescriptio
 
 	if (lpDeviceDesc->dwFlags == 0) {
 		ZTRC_TRACE("\tSKIPPED - Does not support interface with hardware.");
-		return 1;
+		return D3DENUMRET_OK;
 	}
 
 	if (!(lpDeviceDesc->dwFlags & D3DDD_COLORMODEL) && lpDeviceDesc->dcmColorModel != D3DCOLOR_RGB) {
 		ZTRC_TRACE("\tSKIPPED - Does not support RGB color.");
-		return 1;
+		return D3DENUMRET_OK;
 	}
 
 	if (!(lpDeviceDesc->dwDeviceZBufferBitDepth & DDBD_16)) {
 		ZTRC_TRACE("\tSKIPPED - Does not support 16 bit ZBuffer.");
-		return 1;
+		return D3DENUMRET_OK;
 	}
 
 	if (data->suitableDevicesCount >= 3) {
-		ZTRC_TRACE("\tSKIPPED - Already at maximum device count.");
+		ZTRC_TRACE("\tSKIPPED - Already at maximum device count. Stopping enumeration.");
 		// TODO: Implements the functions at 0x00578db3
-		return 0;
+		return D3DENUMRET_CANCEL;
 	}
 
 	ZTRC_TRACE("\tACCEPTED.");
@@ -232,6 +233,6 @@ BOOL __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescriptio
 	strncpy(currentDescriptor->deviceName, lpDeviceName, ZUTL_COUNTOF_FIELD(ZGfxD3DDEVICEDESCStorage, deviceName));
 	strncpy(currentDescriptor->deviceDescriptor, lpDeviceDescription, ZUTL_COUNTOF_FIELD(ZGfxD3DDEVICEDESCStorage, deviceDescriptor));
 	
-	return false;
+	return D3DENUMRET_OK;
 }
 
