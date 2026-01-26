@@ -3,9 +3,9 @@
 #include <stdarg.h>
 #include <stdint.h>
 
-#include <engine/memory.h>
 #include <common/hack.h>
 #include <common/trace.h>
+#include <engine/memory/memory.h>
 
 ZLocalization ZLoc;
 

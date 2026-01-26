@@ -1,16 +1,16 @@
-#include "engine/graphics/errors.h"
 #include <stdint.h>
 #include <stdbool.h>
 
-#include <game/game.h>
-#include <engine/graphics.h>
-#include <engine/memory.h>
-#include <engine/localization.h>
-#include <engine/dat_script_engine.h>
-#include <engine/platform.h>
 #include <common/hack.h>
 #include <common/trace.h>
 #include <common/utils.h>
+#include <engine/graphics/graphics.h>
+#include <engine/graphics/errors.h>
+#include <engine/memory/memory.h>
+#include <engine/localization/localization.h>
+#include <engine/data/script_engine.h>
+#include <engine/platform/platform.h>
+#include <game/game.h>
 
 // NOTE: It is not possible to refer to "Mech3.exe" as the main module, since the executable may be renamed (e.g. "Mech3Fixup.exe")
 // 	Thus we must use CHCK_DEFAULT_MODULE (which equates to NULL) to get the module of the main executable.

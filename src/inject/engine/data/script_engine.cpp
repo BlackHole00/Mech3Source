@@ -1,12 +1,11 @@
-#include "dat_script_engine.h"
+#include "script_engine.h"
 
 #include <string.h>
+#include <Windows.h>
 
-#include "memory.h"
+#include <engine/memory/memory.h>
 
 ZGame ZGam;
-
-#include <Windows.h>
 
 ZDatScriptVariable* __thiscall ZDatScriptEngine::GetScriptVariablePtr(const char* variableName) {
 	if (this->variablesListLength == 0) {
