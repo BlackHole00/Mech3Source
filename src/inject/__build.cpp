@@ -9,6 +9,7 @@
 #include <common/trace.cpp>
 #include <engine/memory.cpp>
 #include <engine/graphics.cpp>
+#include <engine/graphics/errors.cpp>
 #include <engine/localization.cpp>
 #include <engine/dat_script_engine.cpp>
 #include <engine/platform.cpp>

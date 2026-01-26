@@ -13,5 +13,5 @@ void CTrcDeinit(void);
 void CTrcTrace(const char* format, ...);
 void CTrcFlush(void);
 
-#define CTRC_TRACE(_format, ...) do { CTrcTrace("[%s:%d] - " _format "\n", __FUNCTION__, __LINE__, __VA_ARGS__); } while(0)
+#define CTRC_TRACE(_format, ...) do { CTrcTrace("[%s (%s:%d)] " _format "\n", __FUNCTION__, __FILE__, __LINE__, __VA_ARGS__); } while(0)
 

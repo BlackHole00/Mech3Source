@@ -9,6 +9,7 @@
 #include <common/utils.h>
 #include <common/trace.h>
 #include <common/hack.h>
+#include <engine/graphics/errors.h>
 
 typedef HRESULT (WINAPI *DirectDrawCreateProc)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
 typedef HRESULT (WINAPI *DirectInputCreateAProc)(HINSTANCE hInstance, DWORD dwVersion, LPDIRECTINPUTA* ppDi, LPUNKNOWN punkOther);
@@ -176,7 +177,7 @@ HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescrip
 	ZGraphics* gfx = (ZGraphics*)userdata;
 
 	ZGfxD3DDEVICEDESCStorage* currentDescriptor = &gfx->descriptors[gfx->suitableDevicesCount];
-	CTRC_TRACE("Found driver: `%s` (%s):", lpDeviceName, lpDeviceDesc);
+	CTRC_TRACE("Found Device: `%s` (%s):", lpDeviceName, lpDeviceDesc);
 
 	if (lpDeviceDesc->dwFlags == 0) {
 		CTRC_TRACE("\tSKIPPED - Does not support interface with hardware.");
@@ -224,11 +225,12 @@ HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescrip
 	return D3DENUMRET_OK;
 }
 
-bool __fastcall ZGfxLoadD3D(ZGraphics* gfx) {
+bool __fastcall ZGfxEnumerateDevices(ZGraphics* gfx) {
 	CTRC_TRACE("Enumerating Devices (%s)...", &gfx->field_0x14);
 
-	if ((*ZGfxEx.directDraw)->QueryInterface(IID_IDirect3D3, (void**)ZGfxEx.direct3D) != S_OK) {
-		// TODO: Hook ZGfxHandleError
+	HRESULT res = (*ZGfxEx.directDraw)->QueryInterface(IID_IDirect3D3, (void**)ZGfxEx.direct3D);
+	if (res != S_OK) {
+		ZGFX_HANDLE_ERROR(res);
 		return false;
 	}
 
