@@ -30,6 +30,7 @@ CHckCodeReplacement MECH3_REPLACEMENT_TABLE[] = {
 	{ CHCK_DEFAULT_MODULE, 0x004828d0, CHCK_VIRTUAL_ADDRESS, (void*)ZPltSetupCurrentWorkingDirectory	},
 	{ CHCK_DEFAULT_MODULE, 0x0057a3d0, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckCapabilities			},
 	{ CHCK_DEFAULT_MODULE, 0x00578cd0, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckDeviceSuitability		},
+	{ CHCK_DEFAULT_MODULE, 0x00578c00, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxEnumerateDevices			},
 	{ CHCK_DEFAULT_MODULE, 0x004af280, CHCK_VIRTUAL_ADDRESS, (void*)GGamGetVersionString			},
 	{ CHCK_DEFAULT_MODULE, 0x004af285, CHCK_VIRTUAL_ADDRESS, (void*)GGamGetVersionString			},
 	{ CHCK_DEFAULT_MODULE, 0x00595f30, CHCK_VIRTUAL_ADDRESS, CHckMethodPtrToPtr(&ZDatScriptEngine::GetScriptVariablePtr)	},
@@ -45,6 +46,7 @@ BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD reason, LPVOID _reserved) {
 		CTrcInit();
 		ZPltInit();
 		ZMemInit();
+		ZGfxInit();
 
 		CHckApplyCodeReplacements(MECH3_REPLACEMENT_TABLE, CUTL_COUNTOF(MECH3_REPLACEMENT_TABLE));
 	} else if (reason == DLL_PROCESS_DETACH) {

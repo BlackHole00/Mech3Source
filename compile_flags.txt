@@ -1,4 +1,5 @@
 --target=i686-pc-windows-msvc
+-xc++
 -Wno-microsoft-goto
 -fms-compatibility
 -fms-extensions

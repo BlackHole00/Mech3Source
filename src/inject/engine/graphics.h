@@ -27,6 +27,32 @@ typedef enum ZGfxCapabilityLevel {
 	ZGFX_FULL_CAPABILITY = ZGFX_HAS_IDIRECTDRAWSURFACE4,
 } ZGfxCapabilityLevel;
 
+typedef struct ZGfxD3DDEVICEDESCStorage {
+	char deviceName[32];
+	char deviceDescriptor[96];
+	GUID* deviceGuidPtr;
+	GUID deviceGuid;
+	D3DDEVICEDESC descriptor;
+} ZGfxD3DDEVICEDESCStorage;
+
+typedef struct ZGraphics {
+	char _unk0[0x14];
+	uint32_t field_0x14;
+	char _unk1[0xac - 0x14 - sizeof(uint32_t)];
+	size_t suitableDevicesCount;
+	ZGfxD3DDEVICEDESCStorage descriptors[3];
+} ZGraphics;
+extern ZGraphics ZGfx;
+
+typedef struct {
+	IDirectDraw4** directDraw;
+	IDirect3D3** direct3D;
+} ZGraphicsExtra;
+extern ZGraphicsExtra ZGfxEx;
+
+void ZGfxInit(void);
+
 void __fastcall ZGfxCheckCapabilities(ZGfxCapabilityLevel* capabilityLevel, ZGfxInitializationMode* initializationMode);
 
 HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescription, LPSTR lpDeviceName, D3DDEVICEDESC* lpDeviceDesc, D3DDEVICEDESC* lpHelpDeviceDesc, void* userdata);
+bool __fastcall ZGfxEnumerateDevices(ZGraphics* gfx);

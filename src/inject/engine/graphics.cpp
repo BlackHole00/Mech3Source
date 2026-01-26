@@ -6,8 +6,9 @@
 #include <dinput.h>
 #include <winnt.h>
 
-#include <common/trace.h>
 #include <common/utils.h>
+#include <common/trace.h>
+#include <common/hack.h>
 
 typedef HRESULT (WINAPI *DirectDrawCreateProc)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
 typedef HRESULT (WINAPI *DirectInputCreateAProc)(HINSTANCE hInstance, DWORD dwVersion, LPDIRECTINPUTA* ppDi, LPUNKNOWN punkOther);
@@ -15,6 +16,15 @@ typedef HRESULT (WINAPI *DirectInputCreateAProc)(HINSTANCE hInstance, DWORD dwVe
 const GUID DECLSPEC_SELECTANY IID_IDirectDrawSurface3	= { 0xDA044E00, 0x69B2, 0x11D0, { 0xA1, 0xD5, 0x00, 0xAA, 0x00, 0xB8, 0xDF, 0xBB } };
 const GUID DECLSPEC_SELECTANY IID_IDirectDrawSurface4	= { 0x0B2B8630, 0xAD35, 0x11D0, { 0x8E, 0xA6, 0x00, 0x60, 0x97, 0x97, 0xEA, 0x5B } };
 const GUID DECLSPEC_SELECTANY IID_IDirectDraw2		= { 0xB3A6F3E0, 0x2B43, 0x11CF, { 0xA2, 0xDE, 0x00, 0xAA, 0x00, 0xB9, 0x33, 0x56 } };
+const GUID DECLSPEC_SELECTANY IID_IDirect3D3		= { 0xBB223240, 0xE72B, 0x11D0, { 0xA9, 0xB4, 0x00, 0xAA, 0x00, 0xC0, 0x99, 0x3E } };
+
+ZGraphics ZGfx;
+ZGraphicsExtra ZGfxEx;
+
+void ZGfxInit(void) {
+	ZGfxEx.directDraw = (IDirectDraw4**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809358);
+	ZGfxEx.direct3D = (IDirect3D3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x0080936c);
+}
 
 void ZGfxCheckCapabilities9x(ZGfxCapabilityLevel* capabilityLevel, ZGfxInitializationMode* initializationMode) {
 	*initializationMode = ZGFX_INIT_WITH_DDRAW;
@@ -162,32 +172,10 @@ void __fastcall ZGfxCheckCapabilities(ZGfxCapabilityLevel* capabilityLevel, ZGfx
 	}
 }
 
-typedef struct ZGfxD3DDEVICEDESCStorage {
-	char deviceName[32];
-	char deviceDescriptor[96];
-	GUID* deviceGuidPtr;
-	GUID deviceGuid;
-	D3DDEVICEDESC descriptor;
-} ZGfxD3DDEVICEDESCStorage;
-_STATIC_ASSERT(sizeof(ZGfxD3DDEVICEDESCStorage) == 400);
-_STATIC_ASSERT(offsetof(ZGfxD3DDEVICEDESCStorage, deviceName) == 0x0);
-_STATIC_ASSERT(offsetof(ZGfxD3DDEVICEDESCStorage, deviceDescriptor) == 0x20);
-_STATIC_ASSERT(offsetof(ZGfxD3DDEVICEDESCStorage, deviceGuidPtr) == 0x80);
-_STATIC_ASSERT(offsetof(ZGfxD3DDEVICEDESCStorage, deviceGuid) == 0x84);
-_STATIC_ASSERT(offsetof(ZGfxD3DDEVICEDESCStorage, descriptor) == 0x94);
-
-typedef struct ZGfxSomeUserData {
-	char _unk1[0xac];
-	size_t suitableDevicesCount;
-	ZGfxD3DDEVICEDESCStorage descriptors[3];
-} ZGfxSomeUserData;
-_STATIC_ASSERT(offsetof(ZGfxSomeUserData, suitableDevicesCount) == 0xac);
-_STATIC_ASSERT(offsetof(ZGfxSomeUserData, descriptors) == 0xb0);
-
 HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescription, LPSTR lpDeviceName, D3DDEVICEDESC* lpDeviceDesc, D3DDEVICEDESC* lpHelpDeviceDesc, void* userdata) {
-	ZGfxSomeUserData* data = (ZGfxSomeUserData*)userdata;
+	ZGraphics* gfx = (ZGraphics*)userdata;
 
-	ZGfxD3DDEVICEDESCStorage* currentDescriptor = &data->descriptors[data->suitableDevicesCount];
+	ZGfxD3DDEVICEDESCStorage* currentDescriptor = &gfx->descriptors[gfx->suitableDevicesCount];
 	CTRC_TRACE("Found driver: `%s` (%s):", lpDeviceName, lpDeviceDesc);
 
 	if (lpDeviceDesc->dwFlags == 0) {
@@ -205,7 +193,7 @@ HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescrip
 		return D3DENUMRET_OK;
 	}
 
-	if (data->suitableDevicesCount >= 3) {
+	if (gfx->suitableDevicesCount >= 3) {
 		CTRC_TRACE("\tSKIPPED - Already at maximum device count. Stopping enumeration.");
 		// TODO: Implements the functions at 0x00578db3
 		return D3DENUMRET_CANCEL;
@@ -234,5 +222,29 @@ HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescrip
 	strncpy(currentDescriptor->deviceDescriptor, lpDeviceDescription, CUTL_COUNTOF_FIELD(ZGfxD3DDEVICEDESCStorage, deviceDescriptor));
 	
 	return D3DENUMRET_OK;
+}
+
+bool __fastcall ZGfxLoadD3D(ZGraphics* gfx) {
+	CTRC_TRACE("Enumerating Devices (%s)...", &gfx->field_0x14);
+
+	if ((*ZGfxEx.directDraw)->QueryInterface(IID_IDirect3D3, (void**)ZGfxEx.direct3D) != S_OK) {
+		// TODO: Hook ZGfxHandleError
+		return false;
+	}
+
+	gfx->suitableDevicesCount = 0;
+	(*ZGfxEx.direct3D)->EnumDevices(ZGfxCheckDeviceSuitability, gfx);
+
+	if (*ZGfxEx.direct3D != NULL) {
+		(*ZGfxEx.direct3D)->Release();
+		*ZGfxEx.direct3D = NULL;
+	}
+
+	if (gfx->suitableDevicesCount == 0) {
+		CTRC_TRACE("No suitable devices.");
+		return false;
+	}
+
+	return true;
 }
 
