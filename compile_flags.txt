@@ -1,0 +1,8 @@
+--target=i686-pc-windows-msvc
+-Wno-microsoft-goto
+-fms-compatibility
+-fms-extensions
+-Isrc/inject
+-D_CRT_SECURE_NO_WARNINGS
+-DDIRECT3D_VERSION=0x600
+-DDIRECTINPUT_VERSION=0x0500

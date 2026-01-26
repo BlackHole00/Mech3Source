@@ -6,8 +6,8 @@
 #include <dinput.h>
 #include <winnt.h>
 
-#include "trace.h"
-#include "utils.h"
+#include <common/trace.h>
+#include <common/utils.h>
 
 typedef HRESULT (WINAPI *DirectDrawCreateProc)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
 typedef HRESULT (WINAPI *DirectInputCreateAProc)(HINSTANCE hInstance, DWORD dwVersion, LPDIRECTINPUTA* ppDi, LPUNKNOWN punkOther);
@@ -188,30 +188,30 @@ HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescrip
 	ZGfxSomeUserData* data = (ZGfxSomeUserData*)userdata;
 
 	ZGfxD3DDEVICEDESCStorage* currentDescriptor = &data->descriptors[data->suitableDevicesCount];
-	ZTRC_TRACE("Found driver: `%s` (%s):", lpDeviceName, lpDeviceDesc);
+	CTRC_TRACE("Found driver: `%s` (%s):", lpDeviceName, lpDeviceDesc);
 
 	if (lpDeviceDesc->dwFlags == 0) {
-		ZTRC_TRACE("\tSKIPPED - Does not support interface with hardware.");
+		CTRC_TRACE("\tSKIPPED - Does not support interface with hardware.");
 		return D3DENUMRET_OK;
 	}
 
 	if (!(lpDeviceDesc->dwFlags & D3DDD_COLORMODEL) && lpDeviceDesc->dcmColorModel != D3DCOLOR_RGB) {
-		ZTRC_TRACE("\tSKIPPED - Does not support RGB color.");
+		CTRC_TRACE("\tSKIPPED - Does not support RGB color.");
 		return D3DENUMRET_OK;
 	}
 
 	if (!(lpDeviceDesc->dwDeviceZBufferBitDepth & DDBD_16)) {
-		ZTRC_TRACE("\tSKIPPED - Does not support 16 bit ZBuffer.");
+		CTRC_TRACE("\tSKIPPED - Does not support 16 bit ZBuffer.");
 		return D3DENUMRET_OK;
 	}
 
 	if (data->suitableDevicesCount >= 3) {
-		ZTRC_TRACE("\tSKIPPED - Already at maximum device count. Stopping enumeration.");
+		CTRC_TRACE("\tSKIPPED - Already at maximum device count. Stopping enumeration.");
 		// TODO: Implements the functions at 0x00578db3
 		return D3DENUMRET_CANCEL;
 	}
 
-	ZTRC_TRACE("\tACCEPTED.");
+	CTRC_TRACE("\tACCEPTED.");
 
 	if (lpGUID == NULL) {
 		currentDescriptor->deviceGuidPtr = NULL;
@@ -220,7 +220,7 @@ HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescrip
 		currentDescriptor->deviceGuid = *lpGUID;
 	}
 
-	size_t descriptorSize = ZUTL_MIN(sizeof(D3DDEVICEDESC), 252);
+	size_t descriptorSize = CUTL_MIN(sizeof(D3DDEVICEDESC), 252);
 	memcpy(&currentDescriptor->descriptor, lpDeviceDesc, descriptorSize);
 
 	if (currentDescriptor->descriptor.dwMaxTextureWidth == 0) {
@@ -230,8 +230,8 @@ HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescrip
 		currentDescriptor->descriptor.dwMaxTextureHeight = 0x00010000;
 	}
 
-	strncpy(currentDescriptor->deviceName, lpDeviceName, ZUTL_COUNTOF_FIELD(ZGfxD3DDEVICEDESCStorage, deviceName));
-	strncpy(currentDescriptor->deviceDescriptor, lpDeviceDescription, ZUTL_COUNTOF_FIELD(ZGfxD3DDEVICEDESCStorage, deviceDescriptor));
+	strncpy(currentDescriptor->deviceName, lpDeviceName, CUTL_COUNTOF_FIELD(ZGfxD3DDEVICEDESCStorage, deviceName));
+	strncpy(currentDescriptor->deviceDescriptor, lpDeviceDescription, CUTL_COUNTOF_FIELD(ZGfxD3DDEVICEDESCStorage, deviceDescriptor));
 	
 	return D3DENUMRET_OK;
 }

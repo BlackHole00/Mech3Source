@@ -5,11 +5,11 @@
 #define DIRECTINPUT_VERSION 0x0500
 
 #include "main.cpp"
-#include "hack.cpp"
-#include "game.cpp"
-#include "graphics.cpp"
-#include "localization.cpp"
-#include "dat_script_engine.cpp"
-#include "memory.cpp"
-#include "trace.cpp"
-#include "platform.cpp"
+#include <common/hack.cpp>
+#include <common/trace.cpp>
+#include <engine/memory.cpp>
+#include <engine/graphics.cpp>
+#include <engine/localization.cpp>
+#include <engine/dat_script_engine.cpp>
+#include <engine/platform.cpp>
+#include <game/game.cpp>

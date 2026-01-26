@@ -2,9 +2,10 @@
 
 #include <stdarg.h>
 #include <stdint.h>
-#include "hack.h"
-#include "memory.h"
-#include "trace.h"
+
+#include <engine/memory.h>
+#include <common/hack.h>
+#include <common/trace.h>
 
 ZLocalization ZLoc;
 
@@ -19,10 +20,10 @@ bool __fastcall ZLocLoadMessagesDll(const char* messagesDllPath) {
 	ZLoc.locGetIdProc = (ZLocGetIdProc)GetProcAddress(ZLoc.messagesDllHandle, ZLOC_LOCGETID_PROCNAME);
 
 	if (strcmp(messagesDllPath, "mech3Msg.dll") != 0) {
-		ZTRC_TRACE("WARN: Unexpected messageDllPath. Got `%s`, expected `mech3Msg.dll`.", messagesDllPath);
+		CTRC_TRACE("WARN: Unexpected messageDllPath. Got `%s`, expected `mech3Msg.dll`.", messagesDllPath);
 	}
-	ZHckModuleDescriptor messagesDllModule = { messagesDllPath, 0x10000000 };
-	ZHckRegisterModule(&messagesDllModule);
+	CHckModuleDescriptor messagesDllModule = { messagesDllPath, 0x10000000 };
+	CHckRegisterModule(&messagesDllModule);
 
 	return true;
 }

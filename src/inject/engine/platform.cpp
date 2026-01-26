@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <Windows.h>
 
-#include "game.h"
-#include "utils.h"
+#include <game/game.h>
+#include <common/utils.h>
 
 ZPlatform ZPlt;
 
@@ -15,8 +15,8 @@ void ZPltInit(void) {
 bool ZPltSetupCurrentWorkingDirectory(void) {
 	char buffer[64];
 
-	const char* version = ZGamGetVersionString();
-	snprintf(buffer, ZUTL_COUNTOF(buffer), "Software\\Zipper\\MechWarrior3\\%s", version);
+	const char* version = GGamGetVersionString();
+	snprintf(buffer, CUTL_COUNTOF(buffer), "Software\\Zipper\\MechWarrior3\\%s", version);
 
 	HKEY key;
 	if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, buffer, 0, KEY_EXECUTE, &key) != ERROR_SUCCESS) {
@@ -24,7 +24,7 @@ bool ZPltSetupCurrentWorkingDirectory(void) {
 	}
 
 	BYTE keyBuffer[64];
-	DWORD keyBufferLength = ZUTL_COUNTOF(keyBuffer);
+	DWORD keyBufferLength = CUTL_COUNTOF(keyBuffer);
 	DWORD type = REG_SZ;
 	if (RegQueryValueExA(key, "RunDir", 0, &type, keyBuffer, &keyBufferLength) != ERROR_SUCCESS) {
 		return false;

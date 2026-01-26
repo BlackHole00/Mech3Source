@@ -1,54 +1,54 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "game.h"
-#include "graphics.h"
-#include "hack.h"
-#include "memory.h"
-#include "platform.h"
-#include "trace.h"
-#include "localization.h"
-#include "dat_script_engine.h"
-#include "utils.h"
+#include <game/game.h>
+#include <engine/graphics.h>
+#include <engine/memory.h>
+#include <engine/localization.h>
+#include <engine/dat_script_engine.h>
+#include <engine/platform.h>
+#include <common/hack.h>
+#include <common/trace.h>
+#include <common/utils.h>
 
 // NOTE: It is not possible to refer to "Mech3.exe" as the main module, since the executable may be renamed (e.g. "Mech3Fixup.exe")
-// 	Thus we must use ZHCK_DEFAULT_MODULE (which equates to NULL) to get the module of the main executable.
+// 	Thus we must use CHCK_DEFAULT_MODULE (which equates to NULL) to get the module of the main executable.
 // NOTE: mech3Msg.dll does not get loaded on startup. ZLocLoadMessagesDll is responsible to register its module.
-ZHckModuleDescriptor MECH3_MODULES[] = {
-	{ ZHCK_DEFAULT_MODULE, 	0x00400000 },
+CHckModuleDescriptor MECH3_MODULES[] = {
+	{ CHCK_DEFAULT_MODULE, 	0x00400000 },
 };
 
-ZHckCodeReplacement MECH3_REPLACEMENT_TABLE[] = {
-	{ ZHCK_DEFAULT_MODULE, 0x00575fd0, ZHCK_VIRTUAL_ADDRESS, (void*)ZLocFormatString			},
-	{ ZHCK_DEFAULT_MODULE, 0x00575ff0, ZHCK_VIRTUAL_ADDRESS, (void*)ZLocFormatStringV			},
-	{ ZHCK_DEFAULT_MODULE, 0x00575f90, ZHCK_VIRTUAL_ADDRESS, (void*)ZLocGetId				},
-	{ ZHCK_DEFAULT_MODULE, 0x0051c5a0, ZHCK_VIRTUAL_ADDRESS, (void*)ZLocGetString				},
-	{ ZHCK_DEFAULT_MODULE, 0x00576040, ZHCK_VIRTUAL_ADDRESS, (void*)ZLocGetStringI				},
-	{ ZHCK_DEFAULT_MODULE, 0x00575f30, ZHCK_VIRTUAL_ADDRESS, (void*)ZLocLoadMessagesDll			},
-	{ ZHCK_DEFAULT_MODULE, 0x00575f70, ZHCK_VIRTUAL_ADDRESS, (void*)ZLocUnloadMessagesDll			},
-	{ ZHCK_DEFAULT_MODULE, 0x00575d30, ZHCK_VIRTUAL_ADDRESS, (void*)ZPltGetTickCount			},
-	{ ZHCK_DEFAULT_MODULE, 0x004828d0, ZHCK_VIRTUAL_ADDRESS, (void*)ZPltSetupCurrentWorkingDirectory	},
-	{ ZHCK_DEFAULT_MODULE, 0x0057a3d0, ZHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckCapabilities			},
-	{ ZHCK_DEFAULT_MODULE, 0x00578cd0, ZHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckDeviceSuitability		},
-	{ ZHCK_DEFAULT_MODULE, 0x004af280, ZHCK_VIRTUAL_ADDRESS, (void*)ZGamGetVersionString			},
-	{ ZHCK_DEFAULT_MODULE, 0x004af285, ZHCK_VIRTUAL_ADDRESS, (void*)ZGamGetVersionString			},
-	{ ZHCK_DEFAULT_MODULE, 0x00595f30, ZHCK_VIRTUAL_ADDRESS, ZHckMethodPtrToPtr(&ZDatScriptEngine::GetScriptVariablePtr)	},
-	{ ZHCK_DEFAULT_MODULE, 0x00595fa0, ZHCK_VIRTUAL_ADDRESS, ZHckMethodPtrToPtr(&ZDatScriptEngine::SetVariableValue)	},
+CHckCodeReplacement MECH3_REPLACEMENT_TABLE[] = {
+	{ CHCK_DEFAULT_MODULE, 0x00575fd0, CHCK_VIRTUAL_ADDRESS, (void*)ZLocFormatString			},
+	{ CHCK_DEFAULT_MODULE, 0x00575ff0, CHCK_VIRTUAL_ADDRESS, (void*)ZLocFormatStringV			},
+	{ CHCK_DEFAULT_MODULE, 0x00575f90, CHCK_VIRTUAL_ADDRESS, (void*)ZLocGetId				},
+	{ CHCK_DEFAULT_MODULE, 0x0051c5a0, CHCK_VIRTUAL_ADDRESS, (void*)ZLocGetString				},
+	{ CHCK_DEFAULT_MODULE, 0x00576040, CHCK_VIRTUAL_ADDRESS, (void*)ZLocGetStringI				},
+	{ CHCK_DEFAULT_MODULE, 0x00575f30, CHCK_VIRTUAL_ADDRESS, (void*)ZLocLoadMessagesDll			},
+	{ CHCK_DEFAULT_MODULE, 0x00575f70, CHCK_VIRTUAL_ADDRESS, (void*)ZLocUnloadMessagesDll			},
+	{ CHCK_DEFAULT_MODULE, 0x00575d30, CHCK_VIRTUAL_ADDRESS, (void*)ZPltGetTickCount			},
+	{ CHCK_DEFAULT_MODULE, 0x004828d0, CHCK_VIRTUAL_ADDRESS, (void*)ZPltSetupCurrentWorkingDirectory	},
+	{ CHCK_DEFAULT_MODULE, 0x0057a3d0, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckCapabilities			},
+	{ CHCK_DEFAULT_MODULE, 0x00578cd0, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckDeviceSuitability		},
+	{ CHCK_DEFAULT_MODULE, 0x004af280, CHCK_VIRTUAL_ADDRESS, (void*)GGamGetVersionString			},
+	{ CHCK_DEFAULT_MODULE, 0x004af285, CHCK_VIRTUAL_ADDRESS, (void*)GGamGetVersionString			},
+	{ CHCK_DEFAULT_MODULE, 0x00595f30, CHCK_VIRTUAL_ADDRESS, CHckMethodPtrToPtr(&ZDatScriptEngine::GetScriptVariablePtr)	},
+	{ CHCK_DEFAULT_MODULE, 0x00595fa0, CHCK_VIRTUAL_ADDRESS, CHckMethodPtrToPtr(&ZDatScriptEngine::SetVariableValue)	},
 };
 
 BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD reason, LPVOID _reserved) {
 	if (reason == DLL_PROCESS_ATTACH) {
 		MessageBoxA(NULL, "If you need to attach a debugger, now it is a good time to do it!", "MechWarrior3 Source", MB_OK);
 
-		ZHckInit(MECH3_MODULES, ZUTL_COUNTOF(MECH3_MODULES));
+		CHckInit(MECH3_MODULES, CUTL_COUNTOF(MECH3_MODULES));
 
-		ZTrcInit();
+		CTrcInit();
 		ZPltInit();
 		ZMemInit();
 
-		ZHckApplyCodeReplacements(MECH3_REPLACEMENT_TABLE, ZUTL_COUNTOF(MECH3_REPLACEMENT_TABLE));
+		CHckApplyCodeReplacements(MECH3_REPLACEMENT_TABLE, CUTL_COUNTOF(MECH3_REPLACEMENT_TABLE));
 	} else if (reason == DLL_PROCESS_DETACH) {
-		ZTrcDeinit();
+		CTrcDeinit();
 	}
 
 	return TRUE;

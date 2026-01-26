@@ -3,22 +3,22 @@
 #include <assert.h>
 #include <cstdint>
 
-ZHack ZHck;
+CHack CHck;
 
-void ZHckInit(const ZHckModuleDescriptor* modules, size_t modulesCount) {
-	assert(modulesCount <= ZHCK_MAX_MODULES && "Too many modules specified.");
+void CHckInit(const CHckModuleDescriptor* modules, size_t modulesCount) {
+	assert(modulesCount <= CHCK_MAX_MODULES && "Too many modules specified.");
 
-	ZHck.modulesCount = modulesCount;
+	CHck.modulesCount = modulesCount;
 	for (size_t i = 0; i < modulesCount; i++) {
-		const ZHckModuleDescriptor* descriptor = &modules[i];
-		ZHckRegisterModule(descriptor);
+		const CHckModuleDescriptor* descriptor = &modules[i];
+		CHckRegisterModule(descriptor);
 	}
 }
 
-void ZHckRegisterModule(const ZHckModuleDescriptor* descriptor) {
-	assert(ZHck.modulesCount < ZHCK_MAX_MODULES && "Too many modules specified.");
+void CHckRegisterModule(const CHckModuleDescriptor* descriptor) {
+	assert(CHck.modulesCount < CHCK_MAX_MODULES && "Too many modules specified.");
 
-	ZHckModule* module = &ZHck.modules[ZHck.modulesCount];
+	CHckModule* module = &CHck.modules[CHck.modulesCount];
 
 	module->name = descriptor->name;
 	module->module = GetModuleHandleA(descriptor->name);
@@ -27,12 +27,12 @@ void ZHckRegisterModule(const ZHckModuleDescriptor* descriptor) {
 
 	assert(module->module != NULL && "Trying to register an invalid module.");
 
-	ZHck.modulesCount++;
+	CHck.modulesCount++;
 }
 
-ZHckModule* ZHckGetModule(const char* name) {
-	for (size_t i = 0; i < ZHck.modulesCount; i++) {
-		ZHckModule* module = &ZHck.modules[i];
+CHckModule* CHckGetModule(const char* name) {
+	for (size_t i = 0; i < CHck.modulesCount; i++) {
+		CHckModule* module = &CHck.modules[i];
 
 		if ((name == NULL && module->name != NULL) || (name != NULL && module->name == NULL)) {
 			continue;
@@ -46,18 +46,18 @@ ZHckModule* ZHckGetModule(const char* name) {
 	return NULL;
 }
 
-void ZHckApplyCodeReplacement(const ZHckCodeReplacement* replacement) {
+void CHckApplyCodeReplacement(const CHckCodeReplacement* replacement) {
 	void* targetAddress;
 	switch (replacement->targetAddressType) {
-	case ZHCK_VIRTUAL_ADDRESS: {
-			targetAddress = (void*)ZHckVirtualAddressToActual(replacement->moduleName, replacement->targetCodeAddress);
+	case CHCK_VIRTUAL_ADDRESS: {
+			targetAddress = (void*)CHckVirtualAddressToActual(replacement->moduleName, replacement->targetCodeAddress);
 			break;
 		}
-	case ZHCK_RELATIVE_VIRTUAL_ADDRESS: {
-			targetAddress = (void*)ZHckRelativeVirtualAddressToActual(replacement->moduleName, replacement->targetCodeAddress);
+	case CHCK_RELATIVE_VIRTUAL_ADDRESS: {
+			targetAddress = (void*)CHckRelativeVirtualAddressToActual(replacement->moduleName, replacement->targetCodeAddress);
 			break;
 		}
-	case ZHCK_ACTUAL_ADDRESS: {
+	case CHCK_ACTUAL_ADDRESS: {
 			targetAddress = (void*)replacement->targetCodeAddress;
 			break;
 		}
@@ -70,16 +70,16 @@ void ZHckApplyCodeReplacement(const ZHckCodeReplacement* replacement) {
 	patch[0] = 0xE9;
 	*(int32_t*)(patch + 1) = (int32_t)rel;
 	
-	ZHckReplaceBytes(targetAddress, patch, 5, true);
+	CHckReplaceBytes(targetAddress, patch, 5, true);
 }
 
-void ZHckApplyCodeReplacements(const ZHckCodeReplacement* replacements, size_t replacementCount) {
+void CHckApplyCodeReplacements(const CHckCodeReplacement* replacements, size_t replacementCount) {
 	for (size_t i = 0; i < replacementCount; i++) {
-		ZHckApplyCodeReplacement(&replacements[i]);
+		CHckApplyCodeReplacement(&replacements[i]);
 	}
 }
 
-void ZHckReplaceBytes(void* target, const void* source, size_t length, bool didReplaceCode) {
+void CHckReplaceBytes(void* target, const void* source, size_t length, bool didReplaceCode) {
 	DWORD oldProtect;
 
 	VirtualProtect(target, length, PAGE_EXECUTE_READWRITE, &oldProtect);
@@ -91,8 +91,8 @@ void ZHckReplaceBytes(void* target, const void* source, size_t length, bool didR
 	}
 }
 
-uintptr_t ZHckVirtualAddressToActual(const char* moduleName, uintptr_t va) {
-	ZHckModule* module = ZHckGetModule(moduleName);
+uintptr_t CHckVirtualAddressToActual(const char* moduleName, uintptr_t va) {
+	CHckModule* module = CHckGetModule(moduleName);
 	if (module == NULL) {
 		return NULL;
 	}
@@ -100,8 +100,8 @@ uintptr_t ZHckVirtualAddressToActual(const char* moduleName, uintptr_t va) {
 	return module->runtimeBase + (va - module->imageBase);
 }
 
-uintptr_t ZHckRelativeVirtualAddressToActual(const char* moduleName, uintptr_t rva) {
-	ZHckModule* module = ZHckGetModule(moduleName);
+uintptr_t CHckRelativeVirtualAddressToActual(const char* moduleName, uintptr_t rva) {
+	CHckModule* module = CHckGetModule(moduleName);
 	if (module == NULL) {
 		return NULL;
 	}
