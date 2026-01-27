@@ -8,6 +8,7 @@
 #include <common/hack.cpp>
 #include <common/trace.cpp>
 #include <engine/memory/memory.cpp>
+#include <engine/graphics/capability_tests.cpp>
 #include <engine/graphics/graphics.cpp>
 #include <engine/graphics/errors.cpp>
 #include <engine/localization/localization.cpp>

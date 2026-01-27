@@ -5,6 +5,7 @@
 #include <common/trace.h>
 #include <common/utils.h>
 #include <engine/graphics/graphics.h>
+#include <engine/graphics/capability_tests.h>
 #include <engine/graphics/errors.h>
 #include <engine/memory/memory.h>
 #include <engine/localization/localization.h>
@@ -31,6 +32,7 @@ CHckCodeReplacement MECH3_REPLACEMENT_TABLE[] = {
 	{ CHCK_DEFAULT_MODULE, 0x004828d0, CHCK_VIRTUAL_ADDRESS, (void*)ZPltSetupCurrentWorkingDirectory	},
 	{ CHCK_DEFAULT_MODULE, 0x0057a3d0, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckCapabilities			},
 	{ CHCK_DEFAULT_MODULE, 0x00578cd0, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckDeviceSuitability		},
+	{ CHCK_DEFAULT_MODULE, 0x00577d40, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxInitDirectDraw			},
 	{ CHCK_DEFAULT_MODULE, 0x00578c00, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxEnumerateDevices			},
 	{ CHCK_DEFAULT_MODULE, 0x00580550, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxHandleError				},
 	{ CHCK_DEFAULT_MODULE, 0x004af280, CHCK_VIRTUAL_ADDRESS, (void*)GGamGetVersionString			},
@@ -39,7 +41,7 @@ CHckCodeReplacement MECH3_REPLACEMENT_TABLE[] = {
 	{ CHCK_DEFAULT_MODULE, 0x00595fa0, CHCK_VIRTUAL_ADDRESS, CHckMethodPtrToPtr(&ZDatScriptEngine::SetVariableValue)	},
 };
 
-BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD reason, LPVOID _reserved) {
+BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD reason, LPVOID _reserved) {
 	if (reason == DLL_PROCESS_ATTACH) {
 		MessageBoxA(NULL, "If you need to attach a debugger, now it is a good time to do it!", "MechWarrior3 Source", MB_OK);
 
