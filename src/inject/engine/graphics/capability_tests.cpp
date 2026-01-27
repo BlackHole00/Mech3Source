@@ -208,6 +208,9 @@ HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescrip
 
 	strncpy(currentDescriptor->deviceName, lpDeviceName, CUTL_COUNTOF_FIELD(ZGfxD3DDEVICEDESCStorage, deviceName));
 	strncpy(currentDescriptor->deviceDescriptor, lpDeviceDescription, CUTL_COUNTOF_FIELD(ZGfxD3DDEVICEDESCStorage, deviceDescriptor));
+
+	gfx->suitableDevicesCount++;
+	// TODO: also update global variable?
 	
 	return D3DENUMRET_OK;
 }
