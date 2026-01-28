@@ -22,6 +22,8 @@ void ZGfxInit(void) {
 	ZGfxEx.driverGUID = (GUID***)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809644);
 	ZGfxEx.directDraw = (IDirectDraw4**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809358);
 	ZGfxEx.direct3D = (IDirect3D3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x0080936c);
+
+	ZGfxEx.surface = (IDirectDrawSurface3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809378);
 }
 
 HRESULT WINAPI ZGfxDirectDrawCreate(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter) {

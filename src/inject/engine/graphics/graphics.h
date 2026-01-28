@@ -29,6 +29,8 @@ typedef struct {
 	GUID*** driverGUID;
 	IDirectDraw4** directDraw;
 	IDirect3D3** direct3D;
+
+	IDirectDrawSurface3** surface;
 } ZGraphicsExtra;
 extern ZGraphicsExtra ZGfxEx;
 

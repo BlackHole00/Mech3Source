@@ -1,3 +1,4 @@
+#include "engine/graphics/hal.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -34,6 +35,7 @@ CHckCodeReplacement MECH3_REPLACEMENT_TABLE[] = {
 	{ CHCK_DEFAULT_MODULE, 0x00578cd0, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckDeviceSuitability		},
 	{ CHCK_DEFAULT_MODULE, 0x00577d40, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxInitDirectDraw			},
 	{ CHCK_DEFAULT_MODULE, 0x00578c00, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxEnumerateDevices			},
+	{ CHCK_DEFAULT_MODULE, 0x00577770, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxClearSurfaceZBuffer			},
 	{ CHCK_DEFAULT_MODULE, 0x00580550, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxHandleError				},
 	{ CHCK_DEFAULT_MODULE, 0x004af280, CHCK_VIRTUAL_ADDRESS, (void*)GGamGetVersionString			},
 	{ CHCK_DEFAULT_MODULE, 0x004af285, CHCK_VIRTUAL_ADDRESS, (void*)GGamGetVersionString			},
