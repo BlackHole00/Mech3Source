@@ -33,6 +33,7 @@ typedef struct {
 	IDirectDraw4** directDraw;
 	IDirect3D3** direct3D;
 
+	uint32_t* DAT_008026e0;
 	uint32_t* resolutionWidth;
 	uint32_t* resolutionHeight;
 	uint32_t* resolutionBpp;

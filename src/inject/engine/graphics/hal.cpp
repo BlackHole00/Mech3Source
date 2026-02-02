@@ -27,6 +27,14 @@ HRESULT __fastcall ZGfxClearSurfaceZBuffer(RECT* rect) {
 	return S_OK;
 }
 
+void __stdcall ZGfxEvictTextures(void) {
+	if (*ZGfxEx.DAT_008026e0 != 1 || *ZGfxEx.direct3D == NULL) {
+		return;
+	}
+
+	(*ZGfxEx.direct3D)->EvictManagedTextures();
+}
+
 bool __stdcall ZGfxEnterFullscreen(void) {
 	HRESULT res;
 

@@ -25,6 +25,7 @@ void ZGfxInit(void) {
 	ZGfxEx.directDraw = (IDirectDraw4**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809358);
 	ZGfxEx.direct3D = (IDirect3D3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x0080936c);
 
+	ZGfxEx.DAT_008026e0 = (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026e0);
 	ZGfxEx.resolutionWidth = (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027ec);
 	ZGfxEx.resolutionHeight = (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027f0);
 	ZGfxEx.resolutionBpp = (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802718);
