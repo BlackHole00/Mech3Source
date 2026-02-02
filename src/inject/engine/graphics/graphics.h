@@ -26,11 +26,17 @@ extern ZGraphics ZGfx;
 typedef struct {
 	ZGfxDirectDrawCreateProc directDrawCreate;
 
+	// TODO: Move to Plt
+	HWND* mainWindow;
+
 	GUID*** driverGUID;
 	IDirectDraw4** directDraw;
 	IDirect3D3** direct3D;
 
-	IDirectDrawSurface3** surface;
+	uint32_t* resolutionWidth;
+	uint32_t* resolutionHeight;
+	uint32_t* resolutionBpp;
+	IDirectDrawSurface3** zBufferSurface;
 } ZGraphicsExtra;
 extern ZGraphicsExtra ZGfxEx;
 

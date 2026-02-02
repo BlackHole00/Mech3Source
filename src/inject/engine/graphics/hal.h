@@ -34,3 +34,5 @@ typedef struct ZGfxHal {
 
 HRESULT __fastcall ZGfxClearSurfaceZBuffer(RECT* rect);
 
+bool __stdcall ZGfxEnterFullscreen(void);
+
