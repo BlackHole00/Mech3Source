@@ -1,4 +1,5 @@
 #include "hal.h"
+#include "engine/platform/platform.h"
 
 #include <engine/graphics/graphics.h>
 #include <engine/graphics/errors.h>
@@ -20,7 +21,7 @@ HRESULT __fastcall ZGfxClearSurfaceZBuffer(RECT* rect) {
 
 	}
 	if (res != S_OK) {
-		ZGFX_HANDLE_ERROR(res);
+		// ZGFX_HANDLE_ERROR(res);
 		return res;
 	}
 
@@ -53,3 +54,52 @@ bool __stdcall ZGfxEnterFullscreen(void) {
 	return true;
 }
 
+HRESULT __stdcall ZGfxBeginScene(void) {
+	HRESULT res;
+
+	res = (*ZGfxEx.direct3Ddevice)->BeginScene();
+	if (res != S_OK) {
+		ZGFX_HANDLE_ERROR(res);
+		return res;
+	}
+
+	if ((*ZGfxEx.drawMode & 1) != 0) {
+		if (!*ZGfxEx.isWireframeEnabled) {
+			(*ZGfxEx.direct3Ddevice)->SetRenderState(D3DRENDERSTATE_FILLMODE, D3DFILL_SOLID);
+		} else {
+			(*ZGfxEx.direct3Ddevice)->SetRenderState(D3DRENDERSTATE_FILLMODE, D3DFILL_WIREFRAME);
+		}
+		*ZGfxEx.drawMode &= 0xfffffffe;
+	}
+	if ((*ZGfxEx.drawMode & 2) != 0) {
+		(*ZGfxEx.direct3Ddevice)->SetRenderState(D3DRENDERSTATE_DITHERENABLE, *ZGfxEx.isDitheringEnabled);
+		*ZGfxEx.drawMode &= 0xfffffffd;
+	}
+
+	return S_OK;
+}
+
+void __stdcall ZGfxSetFogColor(void) {
+	int r = (int)(ZPlt.floatArgs[0] + 0.5);
+	int g = (int)(ZPlt.floatArgs[1] + 0.5);
+	int b = (int)(ZPlt.floatArgs[2] + 0.5);
+
+	(*ZGfxEx.direct3Ddevice)->SetRenderState(D3DRENDERSTATE_FOGCOLOR, r << 16 | g << 8 | b);
+}
+
+void __stdcall ZGfxSetFog(bool enabled) {
+	// (*ZGfxEx.direct3Ddevice)->SetRenderState(D3DRENDERSTATE_FOGENABLE, false);
+	// return;
+
+	if (*ZGfxEx.isFogEnabled == enabled) {
+		return;
+	}
+
+	(*ZGfxEx.direct3Ddevice)->SetRenderState(D3DRENDERSTATE_FOGENABLE, enabled);
+	*ZGfxEx.isFogEnabled = enabled;
+
+	if (*ZGfxEx.fogMode != 3) {
+		(*ZGfxEx.direct3Ddevice)->SetLightState(D3DLIGHTSTATE_FOGMODE, D3DFOG_LINEAR);
+		*ZGfxEx.fogMode = 3;
+	}
+}

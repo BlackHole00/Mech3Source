@@ -8,6 +8,8 @@
 
 typedef struct ZPlatform {
 	LARGE_INTEGER startTime;
+
+	volatile float* floatArgs;
 } ZPlatform;
 extern ZPlatform ZPlt;
 

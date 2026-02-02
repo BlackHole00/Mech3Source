@@ -32,7 +32,13 @@ typedef struct {
 	GUID*** driverGUID;
 	IDirectDraw4** directDraw;
 	IDirect3D3** direct3D;
+	IDirect3DDevice3** direct3Ddevice;
 
+	uint32_t* drawMode;
+	bool* isWireframeEnabled;
+	bool* isDitheringEnabled;
+	bool* isFogEnabled;
+	uint32_t* fogMode;
 	uint32_t* DAT_008026e0;
 	uint32_t* resolutionWidth;
 	uint32_t* resolutionHeight;

@@ -579,7 +579,10 @@ uint32_t __fastcall ZGfxHandleError(HRESULT result, const char* sourceCodePath, 
 	snprintf(buffer, 256, "DirectDraw Error [%s]", errorNameBuffer);
 
 	CTrcTrace("[%s:%d] - %s.\n", sourceCodePath, lineNumber, buffer);
-	assert(false && "Encountered DirectDraw Error.");
+
+	if (ZGFX_STRICT_ERRORS) {
+		assert(false && "Encountered DirectDraw Error.");
+	}
 
 	return 0xFFFFFFFF;
 }

@@ -48,7 +48,7 @@ void CHckApplyCodeReplacements(const CHckCodeReplacement* replacements, size_t r
 
 void CHckReplaceBytes(void* target, const void* source, size_t length, bool didReplaceCode);
 
-uintptr_t CHckVirtualAddressToActual(const char* modeleName, uintptr_t va);
+uintptr_t CHckVirtualAddressToActual(const char* moduleName, uintptr_t va);
 uintptr_t CHckRelativeVirtualAddressToActual(const char* modeleName, uintptr_t rva);
 
 template <class TMethodPtr>

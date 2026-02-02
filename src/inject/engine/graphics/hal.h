@@ -37,3 +37,7 @@ HRESULT __fastcall ZGfxClearSurfaceZBuffer(RECT* rect);
 void __stdcall ZGfxEvictTextures(void);
 bool __stdcall ZGfxEnterFullscreen(void);
 
+HRESULT __stdcall ZGfxBeginScene(void);
+void __stdcall ZGfxSetFog(bool enabled);
+void __stdcall ZGfxSetFogColor(void);
+

@@ -3,12 +3,15 @@
 #include <stdio.h>
 #include <Windows.h>
 
-#include <game/game.h>
 #include <common/utils.h>
+#include <common/hack.h>
+#include <game/game.h>
 
 ZPlatform ZPlt;
 
 void ZPltInit(void) {
+	ZPlt.floatArgs = (float*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x0072f400);
+
 	QueryPerformanceCounter(&ZPlt.startTime);
 }
 

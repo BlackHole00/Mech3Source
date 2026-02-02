@@ -21,15 +21,21 @@ void ZGfxInit(void) {
 
 	ZGfxEx.mainWindow = (HWND*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802790);
 
-	ZGfxEx.driverGUID = (GUID***)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809644);
-	ZGfxEx.directDraw = (IDirectDraw4**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809358);
-	ZGfxEx.direct3D = (IDirect3D3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x0080936c);
+	ZGfxEx.driverGUID	= (GUID***)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809644);
+	ZGfxEx.directDraw	= (IDirectDraw4**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809358);
+	ZGfxEx.direct3D		= (IDirect3D3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x0080936c);
+	ZGfxEx.direct3Ddevice	= (IDirect3DDevice3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809370);
 
-	ZGfxEx.DAT_008026e0 = (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026e0);
-	ZGfxEx.resolutionWidth = (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027ec);
-	ZGfxEx.resolutionHeight = (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027f0);
-	ZGfxEx.resolutionBpp = (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802718);
-	ZGfxEx.zBufferSurface = (IDirectDrawSurface3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809378);
+	ZGfxEx.drawMode			= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026f8);
+	ZGfxEx.isWireframeEnabled	= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026fc);
+	ZGfxEx.isDitheringEnabled	= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802700);
+	ZGfxEx.isFogEnabled		= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008093b0);
+	ZGfxEx.fogMode			= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008093b8);
+	ZGfxEx.DAT_008026e0		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026e0);
+	ZGfxEx.resolutionWidth		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027ec);
+	ZGfxEx.resolutionHeight		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027f0);
+	ZGfxEx.resolutionBpp		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802718);
+	ZGfxEx.zBufferSurface		= (IDirectDrawSurface3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809378);
 }
 
 HRESULT WINAPI ZGfxDirectDrawCreate(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter) {
