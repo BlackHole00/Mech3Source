@@ -3,6 +3,7 @@
 
 #include <common/memory.h>
 #include <engine/graphics/errors.h>
+#include <yvals_core.h>
 
 HRESULT __fastcall ZGfxLockDDSurface(IDirectDrawSurface3* ddSurface, DDSURFACEDESC2* surfaceDesc) {
 	CMEM_ZERO(*surfaceDesc);
@@ -46,7 +47,7 @@ HRESULT __fastcall ZGfxUnlockDDSurface(IDirectDrawSurface3* ddSurface) {
 }
 
 HRESULT __fastcall ZGfxLockSurface(ZGfxSurface* surface) {
-	if (surface == ZGfxEx.primarySurface && *ZGfxEx.isPrimarySurfaceLocked) {
+	if (surface == ZGfxEx.primarySurface && !*ZGfxEx.isPrimarySurfaceLocked) {
 		return S_OK;
 	}
 
@@ -61,7 +62,7 @@ HRESULT __fastcall ZGfxLockSurface(ZGfxSurface* surface) {
 		surface->height		= surfaceDesc.dwHeight;
 		surface->isLocked	= true;
 		surface->unk0		= 1;
-		surface->pitch		= surfaceDesc.lPitch;
+		surface->pitch		= surfaceDesc.dwLinearSize;
 		surface->surfaceMemory	= surfaceDesc.lpSurface;
 	}
 
@@ -69,7 +70,7 @@ HRESULT __fastcall ZGfxLockSurface(ZGfxSurface* surface) {
 }
 
 HRESULT __fastcall ZGfxUnlockSurface(ZGfxSurface* surface) {
-	if (surface == ZGfxEx.primarySurface && *ZGfxEx.isPrimarySurfaceLocked) {
+	if (surface == ZGfxEx.primarySurface && !*ZGfxEx.isPrimarySurfaceLocked) {
 		return S_OK;
 	}
 
@@ -77,8 +78,8 @@ HRESULT __fastcall ZGfxUnlockSurface(ZGfxSurface* surface) {
 		return S_OK;
 	}
 
-	HRESULT res = ZGfxUnlockDDSurface(surface->ddSurface);
 	surface->isLocked = false;
+	HRESULT res = ZGfxUnlockDDSurface(surface->ddSurface);
 
 	return res;
 }
