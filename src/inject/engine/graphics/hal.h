@@ -6,7 +6,6 @@ typedef bool (__stdcall *ZGfxInitHalProc)(void);
 typedef bool (__stdcall *ZGfxDeinitHalProc)(void);
 typedef HRESULT (__fastcall *ZGfxClearSurfaceZBufferProc)(RECT* rect);
 
-// Note: This could very well be a "ZGfxHudHal", since manipulating its functions only has effect to the hud elements
 typedef struct ZGfxHal {
 	// 0x00809324
 	ZGfxInitHalProc initHal;
@@ -38,6 +37,6 @@ void __stdcall ZGfxEvictTextures(void);
 bool __stdcall ZGfxEnterFullscreen(void);
 
 HRESULT __stdcall ZGfxBeginScene(void);
-void __stdcall ZGfxSetFog(bool enabled);
+void __fastcall ZGfxSetFog(bool enabled);
 void __stdcall ZGfxSetFogColor(void);
 

@@ -38,7 +38,7 @@ typedef struct {
 	bool* isWireframeEnabled;
 	bool* isDitheringEnabled;
 	bool* isFogEnabled;
-	uint32_t* fogMode;
+	DWORD* fogMode;
 	uint32_t* DAT_008026e0;
 	uint32_t* resolutionWidth;
 	uint32_t* resolutionHeight;

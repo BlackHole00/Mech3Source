@@ -2,6 +2,7 @@
 
 #include <common/hack.h>
 #include <common/trace.h>
+#include <corecrt.h>
 #include <ddraw.h>
 #include <engine/graphics/errors.h>
 #include <engine/graphics/capability_tests.h>
@@ -30,7 +31,7 @@ void ZGfxInit(void) {
 	ZGfxEx.isWireframeEnabled	= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026fc);
 	ZGfxEx.isDitheringEnabled	= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802700);
 	ZGfxEx.isFogEnabled		= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008093b0);
-	ZGfxEx.fogMode			= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008093b8);
+	ZGfxEx.fogMode			= (DWORD*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008093b8);
 	ZGfxEx.DAT_008026e0		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026e0);
 	ZGfxEx.resolutionWidth		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027ec);
 	ZGfxEx.resolutionHeight		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027f0);
@@ -74,6 +75,7 @@ bool __fastcall ZGfxEnumerateDevices(ZGraphics* gfx) {
 
 	gfx->suitableDevicesCount = 0;
 	(*ZGfxEx.direct3D)->EnumDevices(ZGfxCheckDeviceSuitability, gfx);
+	_STATIC_ASSERT(sizeof(DDSURFACEDESC2) == 124);
 
 	if (*ZGfxEx.direct3D != NULL) {
 		(*ZGfxEx.direct3D)->Release();

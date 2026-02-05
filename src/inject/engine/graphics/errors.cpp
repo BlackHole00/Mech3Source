@@ -1,5 +1,6 @@
 #include "errors.h"
 
+#include <corecrt.h>
 #include <stdio.h>
 #include <assert.h>
 #include <ddraw.h>
@@ -568,10 +569,11 @@ uint32_t __fastcall ZGfxHandleError(HRESULT result, const char* sourceCodePath, 
 		}
 	}
 
-	char errorNameBuffer[252];
-	strncpy(errorNameBuffer, errorName, 252);
+	char errorNameBuffer[256];
+	strncpy(errorNameBuffer, errorName, 256);
 
-	if (result == (HRESULT)0x8876017c) {
+	_STATIC_ASSERT(DDERR_OUTOFVIDEOMEMORY == 0x8876017c);
+	if (result == DDERR_OUTOFVIDEOMEMORY) {
 		// TODO: Hook functions at 0x00581023
 	}
 
