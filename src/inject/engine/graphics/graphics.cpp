@@ -37,6 +37,9 @@ void ZGfxInit(void) {
 	ZGfxEx.resolutionHeight		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027f0);
 	ZGfxEx.resolutionBpp		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802718);
 	ZGfxEx.zBufferSurface		= (IDirectDrawSurface3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809378);
+
+	ZGfxEx.isPrimarySurfaceLocked	= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026e4);
+	ZGfxEx.primarySurface		= (ZGfxSurface*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027ec);
 }
 
 HRESULT WINAPI ZGfxDirectDrawCreate(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter) {

@@ -4,6 +4,8 @@
 #include <ddraw.h>
 #include <d3d.h>
 
+#include <engine/graphics/surface.h>
+
 typedef HRESULT (WINAPI *ZGfxDirectDrawCreateProc)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
 
 typedef struct ZGfxD3DDEVICEDESCStorage {
@@ -44,6 +46,9 @@ typedef struct {
 	uint32_t* resolutionHeight;
 	uint32_t* resolutionBpp;
 	IDirectDrawSurface3** zBufferSurface;
+
+	bool* isPrimarySurfaceLocked;
+	ZGfxSurface* primarySurface;
 } ZGraphicsExtra;
 extern ZGraphicsExtra ZGfxEx;
 

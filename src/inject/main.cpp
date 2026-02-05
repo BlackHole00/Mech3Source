@@ -1,4 +1,3 @@
-#include "engine/graphics/hal.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -8,6 +7,8 @@
 #include <engine/graphics/graphics.h>
 #include <engine/graphics/capability_tests.h>
 #include <engine/graphics/errors.h>
+#include <engine/graphics/surface.h>
+#include <engine/graphics/hal.h>
 #include <engine/memory/memory.h>
 #include <engine/localization/localization.h>
 #include <engine/data/script_engine.h>
@@ -31,6 +32,10 @@ CHckCodeReplacement MECH3_REPLACEMENT_TABLE[] = {
 	{ CHCK_DEFAULT_MODULE, 0x00575f70, CHCK_VIRTUAL_ADDRESS, (void*)ZLocUnloadMessagesDll			},
 	{ CHCK_DEFAULT_MODULE, 0x00575d30, CHCK_VIRTUAL_ADDRESS, (void*)ZPltGetTickCount			},
 	{ CHCK_DEFAULT_MODULE, 0x004828d0, CHCK_VIRTUAL_ADDRESS, (void*)ZPltSetupCurrentWorkingDirectory	},
+	{ CHCK_DEFAULT_MODULE, 0x00577630, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxLockDDSurface			},
+	{ CHCK_DEFAULT_MODULE, 0x00577690, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxUnlockDDSurface			},
+	{ CHCK_DEFAULT_MODULE, 0x00577590, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxLockSurface				},
+	{ CHCK_DEFAULT_MODULE, 0x00577600, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxUnlockSurface			},
 	{ CHCK_DEFAULT_MODULE, 0x0057a3d0, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckCapabilities			},
 	{ CHCK_DEFAULT_MODULE, 0x00578cd0, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxCheckDeviceSuitability		},
 	{ CHCK_DEFAULT_MODULE, 0x00577d40, CHCK_VIRTUAL_ADDRESS, (void*)ZGfxInitDirectDraw			},

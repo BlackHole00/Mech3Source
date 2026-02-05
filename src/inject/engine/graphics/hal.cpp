@@ -1,7 +1,7 @@
 #include "hal.h"
-#include "common/trace.h"
-#include "engine/platform/platform.h"
 
+#include <common/trace.h>
+#include <engine/platform/platform.h>
 #include <engine/graphics/graphics.h>
 #include <engine/graphics/errors.h>
 
@@ -15,18 +15,18 @@ HRESULT __fastcall ZGfxClearSurfaceZBuffer(RECT* rect) {
 	blitDesc.dwFillDepth = 0;
 
 	HRESULT res;
-	res = (*ZGfxEx.zBufferSurface)->Blt(rect, NULL, NULL, DDBLT_DEPTHFILL, &blitDesc);
+	do {
+		res = (*ZGfxEx.zBufferSurface)->Blt(rect, NULL, NULL, DDBLT_DEPTHFILL, &blitDesc);
+		if (res == S_OK) {
+			return S_OK;
+		}
 
-	while (res == DDERR_SURFACELOST) {
-		res = (*ZGfxEx.zBufferSurface)->Restore();
+		if (res == DDERR_SURFACELOST) {
+			res = (*ZGfxEx.zBufferSurface)->Restore();
+		}
+	} while (res == S_OK);
 
-	}
-	if (res != S_OK) {
-		ZGFX_HANDLE_ERROR(res);
-		return res;
-	}
-
-	return S_OK;
+	return ZGFX_HANDLE_ERROR(res);
 }
 
 void __stdcall ZGfxEvictTextures(void) {
