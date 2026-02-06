@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 
+#include <common/types.h>
 #include <engine/graphics/errors.h>
 
 typedef ZGfxError (__stdcall *ZGfxInitHalProc)(void);
@@ -40,7 +41,7 @@ void __stdcall ZGfxEvictTextures(void);
 bool __stdcall ZGfxEnterFullscreen(void);
 
 HRESULT __stdcall ZGfxBeginScene(void);
-void __fastcall ZGfxSetFog(bool enabled);
+void __fastcall ZGfxSetFog(bool32_t enabled);
 void __stdcall ZGfxSetFogColor(void);
 
 typedef enum ZGfxResolution {

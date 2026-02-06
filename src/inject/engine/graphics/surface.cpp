@@ -47,7 +47,7 @@ HRESULT __fastcall ZGfxUnlockDDSurface(IDirectDrawSurface3* ddSurface) {
 }
 
 HRESULT __fastcall ZGfxLockSurface(ZGfxSurface* surface) {
-	if (surface == ZGfxEx.primarySurface && !*ZGfxEx.isPrimarySurfaceModifiable) {
+	if (surface == &ZGfx->primarySurface && !ZGfx->isPrimarySurfaceModifiable) {
 		return S_OK;
 	}
 
@@ -70,7 +70,7 @@ HRESULT __fastcall ZGfxLockSurface(ZGfxSurface* surface) {
 }
 
 HRESULT __fastcall ZGfxUnlockSurface(ZGfxSurface* surface) {
-	if (surface == ZGfxEx.primarySurface && !*ZGfxEx.isPrimarySurfaceModifiable) {
+	if (surface == &ZGfx->primarySurface && !ZGfx->isPrimarySurfaceModifiable) {
 		return S_OK;
 	}
 

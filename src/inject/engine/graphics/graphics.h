@@ -4,6 +4,7 @@
 #include <ddraw.h>
 #include <d3d.h>
 
+#include <common/types.h>
 #include <engine/graphics/surface.h>
 #include <engine/graphics/hal.h>
 
@@ -48,52 +49,69 @@ typedef struct ZGfxDeviceManager {
 // } ZGfxDeviceManager;
 // _STATIC_ASSERT(sizeof(ZGfxDeviceManager) == 0x2c3 * 4);
 
+typedef struct ZGfxPixelFormat {
+	uint32_t redChannelSize;
+	uint32_t greenChannelSize;
+	uint32_t blueChannelSize;
+
+	uint32_t redBitMask;
+	uint32_t greenBitMask;
+	uint32_t blueBitMask;
+
+	uint32_t redRightShift;
+	uint32_t greenRightShift;
+	uint32_t blueLeftShift;
+
+	uint32_t redExpandMask;
+	uint32_t greenExpandMask;
+	uint32_t blueExpandMask;
+} ZGfxPixelFormat;
+
 typedef struct ZGraphics {
-	uint8_t _pad0[0xc4];
+	undefined4_t DAT_008026e0;
+
+	bool32_t isPrimarySurfaceModifiable;
+	bool32_t primaryAndDepthSurfaceHaveDifferentResolutions;
+	uint8_t _unknown0[0x8];
+	bool32_t isPrimarySurfaceValid; // ?
+	uint32_t drawMode; // see ZGfxBeginScene
+	bool32_t isWireframeEnabled;
+	bool32_t isDitheringEnabled;
+	uint8_t _unknown1[0x10];
+
+	undefined4_t DAT_00802714;
+	uint32_t bpp;
+	bool32_t isInitialized; // ?
+	ZGfxPixelFormat primaryPixelFormat;
+	uint8_t _unknown2[0x40];
+
+	HWND windowHandle;
+	uint8_t _unknown3[0x10];
+
 	ZGfxSurface zBufferSurface;
 	ZGfxSurface attachedSurface;
 	ZGfxSurface primarySurface;
-	uint8_t _pad1[0x6f64 - 0xc4 - 3 * sizeof(ZGfxSurface)];
-	ZGfxDevice* selectedDevice;
-	ZGfxDevice availableDevices[3];
-	uint8_t _pad2[0x19e7bc - 0xc4 - 3 * sizeof(ZGfxSurface) - (0x6f64 - 0xc4 - 3 * sizeof(ZGfxSurface)) - (3 * sizeof(ZGfxDevice) + 4)];
+
+	// INCOMPLETE. The real size is 0x19e7bc. It's a BIIIIIIG BOY...
 } ZGraphics;
-_STATIC_ASSERT(sizeof(ZGraphics) == 0x19e7bc);
-_STATIC_ASSERT(offsetof(ZGraphics, zBufferSurface	) == 0x00c4);
-_STATIC_ASSERT(offsetof(ZGraphics, attachedSurface	) == 0x00e8);
-_STATIC_ASSERT(offsetof(ZGraphics, primarySurface	) == 0x010c);
+// _STATIC_ASSERT(sizeof(ZGraphics) == 0x19e7bc);
+_STATIC_ASSERT(offsetof(ZGraphics, isPrimarySurfaceValid) == 0x14);
+_STATIC_ASSERT(offsetof(ZGraphics, DAT_00802714) == 0x34);
+_STATIC_ASSERT(offsetof(ZGraphics, windowHandle) == 0xb0);
+_STATIC_ASSERT(offsetof(ZGraphics, zBufferSurface) == 0x00c4);
 
 extern ZGraphics* ZGfx;
 
 typedef struct {
 	ZGfxDirectDrawCreateProc directDrawCreate;
 
-	// TODO: Move to Plt
-	HWND* mainWindow;
-
 	GUID*** driverGUID;
 	IDirectDraw4** directDraw;
 	IDirect3D3** direct3D;
 	IDirect3DDevice3** direct3Ddevice;
 
-	uint32_t* drawMode;
-	bool* isWireframeEnabled;
-	bool* isDitheringEnabled;
-	bool* isFogEnabled;
-	DWORD* fogMode;
-	uint32_t* DAT_00802714;
-	uint32_t* DAT_008026e0;
-	uint32_t* resolutionWidth;
-	uint32_t* resolutionHeight;
-	uint32_t* resolutionBpp;
-	// IDirectDrawSurface3** zBufferSurface;
-
-	bool* isInitialized;
-	bool* primaryAndDepthSurfaceHaveDifferentResolutions;
-	bool* isPrimarySurfaceModifiable;
-	ZGfxSurface* primarySurface;
-	ZGfxSurface* attachedSurface;
-	ZGfxSurface* zBufferSurface;
+	bool32_t* isFogEnabled;
+	uint32_t* fogMode;
 
 	ZGfxHal* hal;
 } ZGraphicsExtra;

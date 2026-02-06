@@ -24,30 +24,13 @@ void ZGfxInit(void) {
 
 	ZGfxEx.directDrawCreate = *(ZGfxDirectDrawCreateProc*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x005bb044);
 
-	ZGfxEx.mainWindow = (HWND*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802790);
+	ZGfxEx.isFogEnabled	= (bool32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008093b0);
+	ZGfxEx.fogMode		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008093b8);
 
 	ZGfxEx.driverGUID	= (GUID***)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809644);
 	ZGfxEx.directDraw	= (IDirectDraw4**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809358);
 	ZGfxEx.direct3D		= (IDirect3D3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x0080936c);
 	ZGfxEx.direct3Ddevice	= (IDirect3DDevice3**)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809370);
-
-	ZGfxEx.drawMode			= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026f8);
-	ZGfxEx.isWireframeEnabled	= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026fc);
-	ZGfxEx.isDitheringEnabled	= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802700);
-	ZGfxEx.isFogEnabled		= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008093b0);
-	ZGfxEx.fogMode			= (DWORD*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008093b8);
-	ZGfxEx.DAT_008026e0		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026e0);
-	ZGfxEx.resolutionWidth		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027ec);
-	ZGfxEx.resolutionHeight		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027f0);
-	ZGfxEx.DAT_00802714		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802714);
-	ZGfxEx.resolutionBpp		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802718);
-
-	ZGfxEx.isInitialized			= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x0080271c);
-	ZGfxEx.isPrimarySurfaceModifiable	= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026e4);
-	ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions	= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026e8);
-	ZGfxEx.primarySurface		= (ZGfxSurface*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027ec);
-	ZGfxEx.attachedSurface		= (ZGfxSurface*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027c8);
-	ZGfxEx.zBufferSurface		= (ZGfxSurface*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027a4);
 
 	ZGfxEx.hal = (ZGfxHal*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809324);
 }
