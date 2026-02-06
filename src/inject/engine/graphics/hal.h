@@ -40,3 +40,18 @@ HRESULT __stdcall ZGfxBeginScene(void);
 void __fastcall ZGfxSetFog(bool enabled);
 void __stdcall ZGfxSetFogColor(void);
 
+typedef enum ZGfxResolution {
+	ZGFX_UNKNOWN_RESOLUTION_0	= 0,
+	ZGFX_UNKNOWN_RESOLUTION_1	= 1,
+	ZGFX_640X400_HALFDEPTH		= 2,
+	ZGFX_640X480_HALFDEPTH		= 3,
+	ZGFX_640X400			= 4,
+	ZGFX_640X480			= 5,
+	ZGFX_800X600			= 6,
+	ZGFX_1024X768			= 7,
+	ZGFX_1152X864			= 8,
+	ZGFX_1280X1024			= 9,
+	ZGFX_1600X1200			= 10
+} ZGfxResolution;
+
+void __fastcall ZGfxSetupResolution(ZGfxResolution resolution);

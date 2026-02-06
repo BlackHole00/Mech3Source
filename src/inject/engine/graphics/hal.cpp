@@ -16,13 +16,13 @@ HRESULT __fastcall ZGfxClearSurfaceZBuffer(RECT* rect) {
 
 	HRESULT res;
 	do {
-		res = (*ZGfxEx.zBufferSurface)->Blt(rect, NULL, NULL, DDBLT_DEPTHFILL, &blitDesc);
+		res = ZGfxEx.zBufferSurface->ddSurface->Blt(rect, NULL, NULL, DDBLT_DEPTHFILL, &blitDesc);
 		if (res == S_OK) {
 			return S_OK;
 		}
 
 		if (res == DDERR_SURFACELOST) {
-			res = (*ZGfxEx.zBufferSurface)->Restore();
+			res = ZGfxEx.zBufferSurface->ddSurface->Restore();
 		}
 	} while (res == S_OK);
 
@@ -100,3 +100,124 @@ void __stdcall ZGfxSetFogColor(void) {
 	(*ZGfxEx.direct3Ddevice)->SetRenderState(D3DRENDERSTATE_FOGCOLOR, r << 16 | g << 8 | b);
 }
 
+void __fastcall ZGfxSetupResolution(ZGfxResolution resolution) {
+	switch (resolution) {
+		case ZGFX_UNKNOWN_RESOLUTION_0:
+		case ZGFX_UNKNOWN_RESOLUTION_1: {
+			*ZGfxEx.DAT_00802714 = 0;
+			*ZGfxEx.resolutionBpp = 8;
+		}
+		case ZGFX_640X400_HALFDEPTH: {
+			*ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions = true;
+			ZGfxEx.primarySurface->width	= 640;
+			ZGfxEx.primarySurface->height	= 400;
+			ZGfxEx.attachedSurface->width	= 640;
+			ZGfxEx.attachedSurface->height	= 400;
+			ZGfxEx.zBufferSurface->width	= 320;
+			ZGfxEx.zBufferSurface->height	= 200;
+			*ZGfxEx.resolutionBpp = 16;
+
+			break;
+		}
+		case ZGFX_640X480_HALFDEPTH: {
+			*ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions = true;
+			ZGfxEx.primarySurface->width	= 640;
+			ZGfxEx.primarySurface->height	= 480;
+			ZGfxEx.attachedSurface->width	= 640;
+			ZGfxEx.attachedSurface->height	= 480;
+			ZGfxEx.zBufferSurface->width	= 320;
+			ZGfxEx.zBufferSurface->height	= 240;
+			*ZGfxEx.resolutionBpp = 16;
+
+			break;
+		}
+		case ZGFX_640X400: {
+			*ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions = false;
+			ZGfxEx.primarySurface->width	= 640;
+			ZGfxEx.primarySurface->height	= 400;
+			ZGfxEx.attachedSurface->width	= 640;
+			ZGfxEx.attachedSurface->height	= 400;
+			ZGfxEx.zBufferSurface->width	= 640;
+			ZGfxEx.zBufferSurface->height	= 400;
+			*ZGfxEx.resolutionBpp = 16;
+
+			break;
+		}
+		case ZGFX_640X480: {
+			*ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions = false;
+			ZGfxEx.primarySurface->width	= 640;
+			ZGfxEx.primarySurface->height	= 480;
+			ZGfxEx.attachedSurface->width	= 640;
+			ZGfxEx.attachedSurface->height	= 480;
+			ZGfxEx.zBufferSurface->width	= 640;
+			ZGfxEx.zBufferSurface->height	= 480;
+			*ZGfxEx.resolutionBpp = 16;
+
+			break;
+		}
+		case ZGFX_800X600: {
+			*ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions = false;
+			ZGfxEx.primarySurface->width	= 800;
+			ZGfxEx.primarySurface->height	= 600;
+			ZGfxEx.attachedSurface->width	= 800;
+			ZGfxEx.attachedSurface->height	= 600;
+			ZGfxEx.zBufferSurface->width	= 800;
+			ZGfxEx.zBufferSurface->height	= 600;
+			*ZGfxEx.resolutionBpp = 16;
+
+			break;
+		}
+		case ZGFX_1024X768: {
+			*ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions = false;
+			ZGfxEx.primarySurface->width	= 1024;
+			ZGfxEx.primarySurface->height	= 768;
+			ZGfxEx.attachedSurface->width	= 1024;
+			ZGfxEx.attachedSurface->height	= 768;
+			ZGfxEx.zBufferSurface->width	= 1024;
+			ZGfxEx.zBufferSurface->height	= 768;
+			*ZGfxEx.resolutionBpp = 16;
+
+			break;
+		}
+		case ZGFX_1152X864: {
+			*ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions = false;
+			ZGfxEx.primarySurface->width	= 1152;
+			ZGfxEx.primarySurface->height	= 864;
+			ZGfxEx.attachedSurface->width	= 1152;
+			ZGfxEx.attachedSurface->height	= 864;
+			ZGfxEx.zBufferSurface->width	= 1152;
+			ZGfxEx.zBufferSurface->height	= 864;
+			*ZGfxEx.resolutionBpp = 16;
+
+			break;
+		}
+		case ZGFX_1280X1024: {
+			*ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions = false;
+			ZGfxEx.primarySurface->width	= 1280;
+			ZGfxEx.primarySurface->height	= 1024;
+			ZGfxEx.attachedSurface->width	= 1280;
+			ZGfxEx.attachedSurface->height	= 1024;
+			ZGfxEx.zBufferSurface->width	= 1280;
+			ZGfxEx.zBufferSurface->height	= 1024;
+			*ZGfxEx.resolutionBpp = 16;
+
+			break;
+		}
+		case ZGFX_1600X1200: {
+			*ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions = false;
+			ZGfxEx.primarySurface->width	= 1600;
+			ZGfxEx.primarySurface->height	= 1200;
+			ZGfxEx.attachedSurface->width	= 1600;
+			ZGfxEx.attachedSurface->height	= 1200;
+			ZGfxEx.zBufferSurface->width	= 1600;
+			ZGfxEx.zBufferSurface->height	= 1200;
+			*ZGfxEx.resolutionBpp = 16;
+
+			break;
+		}
+		default: {
+			*ZGfxEx.DAT_00802714 = 0;
+		}
+	}
+
+}

@@ -1,4 +1,5 @@
 #include "capability_tests.h"
+#include "engine/graphics/graphics.h"
 
 #include <corecrt.h>
 #include <ddraw.h>
@@ -152,7 +153,6 @@ void __fastcall ZGfxCheckCapabilities(ZGfxCapabilityLevel* capabilityLevel, ZGfx
 		return;
 	}
 
-	DirectDrawCreateProc directDrawCreate;
 	if (versionInfo.dwPlatformId == VER_PLATFORM_WIN32_NT) {
 		ZGfxCheckCapabilitiesNT(versionInfo.dwMajorVersion, capabilityLevel, initializationMode);
 	} else {
@@ -161,10 +161,10 @@ void __fastcall ZGfxCheckCapabilities(ZGfxCapabilityLevel* capabilityLevel, ZGfx
 }
 
 HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescription, LPSTR lpDeviceName, D3DDEVICEDESC* lpDeviceDesc, D3DDEVICEDESC* lpHelpDeviceDesc, void* userdata) {
-	ZGraphics* gfx = (ZGraphics*)userdata;
+	ZGfxDevice* device = (ZGfxDevice*)userdata;
 
-	ZGfxD3DDEVICEDESCStorage* currentDescriptor = &gfx->descriptors[gfx->suitableDevicesCount];
-	CTRC_TRACE("Found Device: `%s` (%s):", lpDeviceName, lpDeviceDesc);
+	ZGfx3DDevice* d3dDevice = &device->d3DDevices[device->suitableD3DDevicesCount];
+	CTRC_TRACE("Found Device: `%s` (%s):", lpDeviceName, lpDeviceDescription);
 
 	if (lpDeviceDesc->dwFlags == 0) {
 		CTRC_TRACE("\tSKIPPED - Does not support interface with hardware.");
@@ -181,7 +181,7 @@ HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescrip
 		return D3DENUMRET_OK;
 	}
 
-	if (gfx->suitableDevicesCount >= 3) {
+	if (device->suitableD3DDevicesCount >= 3) {
 		CTRC_TRACE("\tSKIPPED - Already at maximum device count. Stopping enumeration.");
 		// TODO: Implements the functions at 0x00578db3
 		return D3DENUMRET_CANCEL;
@@ -190,26 +190,26 @@ HRESULT __stdcall ZGfxCheckDeviceSuitability(GUID* lpGUID, LPSTR lpDeviceDescrip
 	CTRC_TRACE("\tACCEPTED.");
 
 	if (lpGUID == NULL) {
-		currentDescriptor->deviceGuidPtr = NULL;
+		d3dDevice->guidPtr = NULL;
 	} else {
-		currentDescriptor->deviceGuidPtr = &currentDescriptor->deviceGuid;
-		currentDescriptor->deviceGuid = *lpGUID;
+		d3dDevice->guidPtr = &d3dDevice->guid;
+		d3dDevice->guid = *lpGUID;
 	}
 
 	size_t descriptorSize = CUTL_MIN(sizeof(D3DDEVICEDESC), 252);
-	memcpy(&currentDescriptor->descriptor, lpDeviceDesc, descriptorSize);
+	memcpy(&d3dDevice->descriptor, lpDeviceDesc, descriptorSize);
 
-	if (currentDescriptor->descriptor.dwMaxTextureWidth == 0) {
-		currentDescriptor->descriptor.dwMaxTextureWidth = 0x00010000;
+	if (d3dDevice->descriptor.dwMaxTextureWidth == 0) {
+		d3dDevice->descriptor.dwMaxTextureWidth = 0x00010000;
 	}
-	if (currentDescriptor->descriptor.dwMaxTextureHeight == 0) {
-		currentDescriptor->descriptor.dwMaxTextureHeight = 0x00010000;
+	if (d3dDevice->descriptor.dwMaxTextureHeight == 0) {
+		d3dDevice->descriptor.dwMaxTextureHeight = 0x00010000;
 	}
 
-	strncpy(currentDescriptor->deviceName, lpDeviceName, CUTL_COUNTOF_FIELD(ZGfxD3DDEVICEDESCStorage, deviceName));
-	strncpy(currentDescriptor->deviceDescriptor, lpDeviceDescription, CUTL_COUNTOF_FIELD(ZGfxD3DDEVICEDESCStorage, deviceDescriptor));
+	strncpy(d3dDevice->name, lpDeviceName, CUTL_COUNTOF_FIELD(ZGfx3DDevice, name));
+	strncpy(d3dDevice->description, lpDeviceDescription, CUTL_COUNTOF_FIELD(ZGfx3DDevice, description));
 
-	gfx->suitableDevicesCount++;
+	device->suitableD3DDevicesCount++;
 	// TODO: also update global variable?
 	
 	return D3DENUMRET_OK;
