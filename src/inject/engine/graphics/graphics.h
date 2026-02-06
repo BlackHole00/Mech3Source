@@ -5,6 +5,7 @@
 #include <d3d.h>
 
 #include <engine/graphics/surface.h>
+#include <engine/graphics/hal.h>
 
 typedef HRESULT (WINAPI *ZGfxDirectDrawCreateProc)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
 
@@ -87,11 +88,14 @@ typedef struct {
 	uint32_t* resolutionBpp;
 	// IDirectDrawSurface3** zBufferSurface;
 
+	bool* isInitialized;
 	bool* primaryAndDepthSurfaceHaveDifferentResolutions;
 	bool* isPrimarySurfaceModifiable;
 	ZGfxSurface* primarySurface;
 	ZGfxSurface* attachedSurface;
 	ZGfxSurface* zBufferSurface;
+
+	ZGfxHal* hal;
 } ZGraphicsExtra;
 extern ZGraphicsExtra ZGfxEx;
 

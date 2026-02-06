@@ -2,9 +2,12 @@
 
 #include <Windows.h>
 
-typedef bool (__stdcall *ZGfxInitHalProc)(void);
-typedef bool (__stdcall *ZGfxDeinitHalProc)(void);
+#include <engine/graphics/errors.h>
+
+typedef ZGfxError (__stdcall *ZGfxInitHalProc)(void);
+typedef ZGfxError (__stdcall *ZGfxDeinitHalProc)(void);
 typedef HRESULT (__fastcall *ZGfxClearSurfaceZBufferProc)(RECT* rect);
+typedef ZGfxError (__stdcall *ZGfxApplyResolutionProc)(void);
 
 typedef struct ZGfxHal {
 	// 0x00809324
@@ -18,7 +21,7 @@ typedef struct ZGfxHal {
 	// 0x00809334
 	void* proc3;
 	// 0x00809338
-	void* proc4;
+	ZGfxApplyResolutionProc applyResolution;
 	// 0x0080933c
 	void* proc5;
 	// 0x0080933c
@@ -54,4 +57,8 @@ typedef enum ZGfxResolution {
 	ZGFX_1600X1200			= 10
 } ZGfxResolution;
 
+void __fastcall ZGfxChangeResolution(ZGfxResolution resolution);
+ZGfxError __fastcall ZGfxChangeResolutionS(ZGfxResolution resolution); // safe
+
+// Applies the desired resolution width and height to the surfaces, but does not recreate the surfaces
 void __fastcall ZGfxSetupResolution(ZGfxResolution resolution);

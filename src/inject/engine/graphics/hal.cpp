@@ -100,6 +100,20 @@ void __stdcall ZGfxSetFogColor(void) {
 	(*ZGfxEx.direct3Ddevice)->SetRenderState(D3DRENDERSTATE_FOGCOLOR, r << 16 | g << 8 | b);
 }
 
+void __fastcall ZGfxChangeResolution(ZGfxResolution resolution) {
+	ZGfxSetupResolution(resolution);
+	ZGfxEx.hal->applyResolution();
+}
+
+ZGfxError __fastcall ZGfxChangeResolutionS(ZGfxResolution resolution) {
+	if (!*ZGfxEx.isInitialized) {
+		return ZGFX_NOT_INITIALIZED;
+	}
+
+	ZGfxSetupResolution(resolution);
+	return ZGfxEx.hal->applyResolution();
+}
+
 void __fastcall ZGfxSetupResolution(ZGfxResolution resolution) {
 	switch (resolution) {
 		case ZGFX_UNKNOWN_RESOLUTION_0:

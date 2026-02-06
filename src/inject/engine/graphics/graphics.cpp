@@ -42,11 +42,14 @@ void ZGfxInit(void) {
 	ZGfxEx.DAT_00802714		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802714);
 	ZGfxEx.resolutionBpp		= (uint32_t*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00802718);
 
+	ZGfxEx.isInitialized			= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x0080271c);
 	ZGfxEx.isPrimarySurfaceModifiable	= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026e4);
-	ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions		= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026e8);
+	ZGfxEx.primaryAndDepthSurfaceHaveDifferentResolutions	= (bool*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008026e8);
 	ZGfxEx.primarySurface		= (ZGfxSurface*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027ec);
 	ZGfxEx.attachedSurface		= (ZGfxSurface*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027c8);
 	ZGfxEx.zBufferSurface		= (ZGfxSurface*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x008027a4);
+
+	ZGfxEx.hal = (ZGfxHal*)CHckVirtualAddressToActual(CHCK_DEFAULT_MODULE, 0x00809324);
 }
 
 HRESULT WINAPI ZGfxDirectDrawCreate(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter) {
